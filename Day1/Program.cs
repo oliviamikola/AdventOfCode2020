@@ -12,10 +12,83 @@ namespace Day1
         {
             string[] data = File.ReadAllLines(@"C:\projects\AdventOfCode2020\Day1\day1data.txt");
             
-            Console.WriteLine("Part 1: " + Day1.PartOne(data));  // Answer: 731731
-            Console.WriteLine("Part 2: " + Day1.PartTwo(data)); // Answer: 116115990
+            // Console.WriteLine("Part 1: " + Day1.PartOne(data));  // Answer: 731731
+            // Console.WriteLine("Part 2: " + Day1.PartTwo(data)); // Answer: 116115990
+
+            List<int> int_list = converter(data);
+            int_list.Sort();
+
+            List<int> a = new List<int>(){1, 2, 3, 4, 7, 8, 9, 10};
+            foreach (int i in a)
+            {
+                if (binary_search(a, i, 0, a.Count - 1) != true)
+                {
+                    Console.WriteLine(i + " is False.");
+                }
+            }
+            
+            
+            
+            Console.WriteLine(p1attempt(int_list));
         }
 
+        static List<int> converter(string[] data)
+        {
+            List<int> int_list = new List<int>();
+            foreach (string s in data)
+            {
+                int i = Convert.ToInt32(s);
+                int_list.Add(i);
+            }
+            return int_list;
+        }
+
+        static bool binary_search(List<int> data, int value, int start, int end)
+        {
+            if (start == end)
+            {
+                return value == data[start];
+            }
+
+            if (start > end)
+            {
+                return false;
+            }
+
+            int mid = (start + end) / 2;
+
+            if (data[mid] == value)
+            {
+                return true;
+            }
+            else if (data[mid] < value)
+            {
+                return binary_search(data, value, mid, end);
+            }
+            else  // data[mid] > value
+            {
+                return binary_search(data, value, start, mid);
+            }
+        }
+
+        static long p1attempt(List<int> data)
+        {
+            // Assume data is sorted
+            
+            foreach (int d in data)
+            {
+                int missing_sum = 2020 - d;
+                bool in_list = binary_search(data, missing_sum, 0, data.Count - 1);
+
+                if (in_list)
+                {
+                    return d * missing_sum;
+                }
+            }
+
+            return 0;
+        }
+        
         /// <summary>
         /// Finds pair of numbers whose sum adds to 2020
         /// </summary>
